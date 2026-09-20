@@ -1,41 +1,55 @@
-/* ==========================================================================
-   YOUR PROJECTS — edit this array and the cards build themselves.
-
-   {
-     title:       string   required  - shown as the card heading
-     description: string   required  - a couple of sentences
-     image:       string   optional  - file name inside src/assets/projects/
-                                       (a placeholder is drawn if omitted/missing)
-     repo:        string   optional  - GitHub URL   (icon hidden when omitted)
-     live:        string   optional  - live site URL (icon hidden when omitted)
-     tags:        string[] optional  - tech stack chips
-     file:        string   optional  - name in the card's title bar
-                                       (defaults to the title, e.g. my_app.md)
-   }
-   ========================================================================== */
 export default [
     {
-        title: "Project Title One",
-        description:
-            "Short description of the project. Just a couple sentences will do to explain the tech stack and purpose.",
-        repo: "#",
-        live: "#",
+        title: "Calculator",
+        description: "A browser-based calculator built with HTML, CSS and JavaScript.",
+        image: "calculator.png",
+        repo: "https://github.com/Atharvapawar007/calculator",
+        live: "https://atharvapawar007.github.io/calculator/",
         tags: ["HTML", "CSS", "JavaScript"],
+        file: "calculator.md",
     },
+
     {
-        title: "Project Title Two",
+        title: "Library",
         description:
-            "Short description of the project. Just a couple sentences will do to explain the tech stack and purpose.",
-        repo: "#",
-        live: "#",
-        tags: ["Python", "Flask", "SQL"],
+            "A simple library application for managing books and tracking their reading status.",
+        image: "library.png",
+        repo: "https://github.com/Atharvapawar007/Library",
+        live: "https://atharvapawar007.github.io/Library/",
+        tags: ["HTML", "CSS", "JavaScript"],
+        file: "library.md",
     },
+
     {
-        title: "Project Title Three",
+        title: "Rock Paper Scissors",
         description:
-            "Short description of the project. Just a couple sentences will do to explain the tech stack and purpose.",
-        repo: "#",
-        live: "#",
-        tags: ["React", "Node", "ML"],
+            "A browser-based Rock Paper Scissors game built with JavaScript and DOM manipulation.",
+        image: "rock-paper-scissors.png",
+        repo: "https://github.com/Atharvapawar007/rock-paper-scissors",
+        live: "https://atharvapawar007.github.io/rock-paper-scissors/",
+        tags: ["HTML", "CSS", "JavaScript"],
+        file: "rock-papers-scissors.md",
+    },
+
+    {
+        title: "Tic Tac Toe",
+        description:
+            "A two-player Tic Tac Toe game featuring interactive gameplay and dynamic DOM updates.",
+        image: "tic-tac-toe.png",
+        repo: "https://github.com/Atharvapawar007/Tic_Tac_Toe",
+        live: "https://atharvapawar007.github.io/Tic_Tac_Toe/",
+        tags: ["HTML", "CSS", "JavaScript"],
+        file: "tic-tac-toe.md",
+    },
+
+    {
+        title: "Weather App",
+        description:
+            "A weather application that displays weather information using a remote weather API.",
+        image: "weatherApp.png",
+        repo: "https://github.com/Atharvapawar007/WeatherApp",
+        live: "https://atharvapawar007.github.io/WeatherApp/",
+        tags: ["HTML", "CSS", "JavaScript"],
+        file: "weather-app.md",
     },
 ];

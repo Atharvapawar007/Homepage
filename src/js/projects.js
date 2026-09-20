@@ -1,48 +1,73 @@
-import { icon } from "./assets.js";
-import { placeholder } from "./placeholder.js";
+/* ==========================================================================
+   Builds the project cards from an array of project objects.
+   ========================================================================== */
 
-/**
- * Small helper for creating HTML elements.
- */
+import { icon } from "./assets.js";
+
+/* ==========================================================================
+   Project images
+   ========================================================================== */
+
+import calculatorImage from "../assets/projects/calculator.png";
+import libraryImage from "../assets/projects/library.png";
+import rockPaperScissorsImage from "../assets/projects/rock-paper-scissors.png";
+import ticTacToeImage from "../assets/projects/tic-tac-toe.png";
+import weatherAppImage from "../assets/projects/weatherApp.png";
+
+/* ==========================================================================
+   Project image map
+   ========================================================================== */
+
+const projectImages = {
+    "calculator.png": calculatorImage,
+    "library.png": libraryImage,
+    "rock-paper-scissors.png": rockPaperScissorsImage,
+    "tic-tac-toe.png": ticTacToeImage,
+    "weatherApp.png": weatherAppImage,
+};
+
+/* ==========================================================================
+   Tiny hyperscript helper
+   ========================================================================== */
+
 function h(tag, attrs = {}, ...children) {
-    const element = document.createElement(tag);
+    const el = document.createElement(tag);
 
     for (const [key, value] of Object.entries(attrs)) {
         if (value === false || value == null) continue;
 
         if (key === "class") {
-            element.className = value;
+            el.className = value;
         } else if (key === "style") {
-            element.setAttribute("style", value);
+            el.setAttribute("style", value);
         } else {
-            element.setAttribute(key, value === true ? "" : value);
+            el.setAttribute(key, value === true ? "" : value);
         }
     }
 
     children.flat().forEach((child) => {
         if (child == null || child === false) return;
 
-        element.append(child.nodeType ? child : document.createTextNode(child));
+        el.append(child.nodeType ? child : document.createTextNode(child));
     });
 
-    return element;
+    return el;
 }
 
-/**
- * Convert a project title into a filename-friendly string.
- */
-function slug(text) {
-    return (
-        String(text)
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "_")
-            .replace(/^_+|_+$/g, "") || "project"
-    );
-}
+/* ==========================================================================
+   Create a filename-friendly slug
+   ========================================================================== */
 
-/**
- * Create GitHub / live-site icon links.
- */
+const slug = (text) =>
+    String(text)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "") || "project";
+
+/* ==========================================================================
+   Create GitHub / live-site links
+   ========================================================================== */
+
 function iconLink(kind, href, label) {
     if (!href) return null;
 
@@ -61,6 +86,7 @@ function iconLink(kind, href, label) {
             target: external ? "_blank" : null,
             rel: external ? "noopener noreferrer" : null,
         },
+
         h("img", {
             src,
             alt: "",
@@ -69,34 +95,75 @@ function iconLink(kind, href, label) {
     );
 }
 
-/**
- * Create one project card.
- */
+/* ==========================================================================
+   Create one project card
+   ========================================================================== */
+
 function createCard(project, index) {
-    const { title, description, repo, live, tags = [], file } = project;
+    const { title, description, image, repo, live, tags = [], file } = project;
 
     const name = slug(title);
 
-    /*
-     * Project screenshots have not been added yet,
-     * so use the generated placeholder.
-     */
-    const imageUrl = placeholder(`${name}.png`, 600, 400);
+    /* --------------------------------------------------------------
+       Get the actual imported project image
+       -------------------------------------------------------------- */
 
-    const image = h("img", {
+    const imageSrc = image ? projectImages[image] : null;
+
+    /* --------------------------------------------------------------
+       Create project image
+       -------------------------------------------------------------- */
+
+    const img = h("img", {
         class: "project-img",
-        src: imageUrl,
         alt: `${title} screenshot`,
         width: 600,
         height: 400,
         loading: "lazy",
     });
 
+    if (imageSrc) {
+        img.src = imageSrc;
+    } else {
+        console.warn(`[projects] Image "${image}" not found for "${title}".`);
+
+        /*
+         * Keep the old placeholder behavior if an image
+         * is missing.
+         */
+        const canvas = document.createElement("canvas");
+
+        canvas.width = 600;
+        canvas.height = 400;
+
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#020807";
+        ctx.fillRect(0, 0, 600, 400);
+
+        ctx.fillStyle = "#00ff88";
+        ctx.font = "20px monospace";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.fillText(`${name}.png`, 300, 200);
+
+        img.src = canvas.toDataURL("image/png");
+    }
+
+    /* --------------------------------------------------------------
+       Project links
+       -------------------------------------------------------------- */
+
     const links = [
         iconLink("github", repo, `View source code of ${title} on GitHub`),
 
         iconLink("visit", live, `Visit live ${title}`),
     ].filter(Boolean);
+
+    /* --------------------------------------------------------------
+       Project card
+       -------------------------------------------------------------- */
 
     return h(
         "article",
@@ -112,6 +179,7 @@ function createCard(project, index) {
             "aria-hidden": "true",
         }),
 
+        /* Card top bar */
         h(
             "div",
             { class: "card-bar" },
@@ -122,6 +190,7 @@ function createCard(project, index) {
                     class: "dots",
                     "aria-hidden": "true",
                 },
+
                 h("i"),
                 h("i"),
                 h("i"),
@@ -130,22 +199,54 @@ function createCard(project, index) {
             h("span", { class: "card-file" }, file || `${name}.md`),
         ),
 
-        h("div", { class: "project-image-wrapper" }, image),
-
+        /* Project image */
         h(
             "div",
-            { class: "project-details" },
+            {
+                class: "project-image-wrapper",
+            },
+            img,
+        ),
+
+        /* Project information */
+        h(
+            "div",
+            {
+                class: "project-details",
+            },
 
             h(
                 "div",
-                { class: "project-header" },
+                {
+                    class: "project-header",
+                },
 
-                h("h3", { class: "project-title" }, title),
+                h(
+                    "h3",
+                    {
+                        class: "project-title",
+                    },
+                    title,
+                ),
 
-                links.length ? h("div", { class: "project-links" }, links) : null,
+                links.length
+                    ? h(
+                          "div",
+                          {
+                              class: "project-links",
+                          },
+                          links,
+                      )
+                    : null,
             ),
 
-            h("p", { class: "project-desc" }, description),
+            h(
+                "p",
+                {
+                    class: "project-desc",
+                },
+                description,
+            ),
 
             tags.length
                 ? h(
@@ -162,9 +263,10 @@ function createCard(project, index) {
     );
 }
 
-/**
- * Render all project cards.
- */
+/* ==========================================================================
+   Render all projects
+   ========================================================================== */
+
 export function renderProjects(container, projects) {
     if (!container) return;
 
@@ -172,7 +274,13 @@ export function renderProjects(container, projects) {
 
     if (!projects.length) {
         container.append(
-            h("p", { class: "projects-empty" }, "$ ls ./projects -> (empty) nothing here yet"),
+            h(
+                "p",
+                {
+                    class: "projects-empty",
+                },
+                "$ ls ./projects  ->  (empty) nothing here yet",
+            ),
         );
 
         return;

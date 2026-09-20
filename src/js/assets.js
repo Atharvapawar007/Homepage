@@ -1,73 +1,108 @@
 import { placeholder } from "./placeholder.js";
 
-// Images
+/* ==========================================================================
+   Images
+   ========================================================================== */
+
 import profilePic from "../assets/profile-pic.png";
 import footerProfile from "../assets/footer-profile.jpg";
 
-// SVG icons
+import calculator from "../assets/projects/calculator.png";
+import library from "../assets/projects/library.png";
+import rockPaperScissors from "../assets/projects/rock-paper-scissors.png";
+import ticTacToe from "../assets/projects/tic-tac-toe.png";
+import weatherApp from "../assets/projects/weatherApp.png";
+
+/* ==========================================================================
+   SVG icons
+   ========================================================================== */
+
+import emailIcon from "../assets/svgs/email.svg";
 import githubIcon from "../assets/svgs/github.svg";
 import linkedinIcon from "../assets/svgs/linkedin.svg";
-import twitterIcon from "../assets/svgs/twitter.svg";
 import locationIcon from "../assets/svgs/location.svg";
 import phoneIcon from "../assets/svgs/phone.svg";
-import emailIcon from "../assets/svgs/email.svg";
+import twitterIcon from "../assets/svgs/twitter.svg";
 import visitIcon from "../assets/svgs/visit.svg";
 
-/*
- * Static assets used directly in template.html.
- */
+/* ==========================================================================
+   Asset map
+   ========================================================================== */
+
 const assets = {
     "profile-pic.png": profilePic,
     "footer-profile.jpg": footerProfile,
 };
 
-/*
- * SVG icons used throughout the website.
- */
+/* ==========================================================================
+   Icon map
+   ========================================================================== */
+
 const icons = {
+    email: emailIcon,
     github: githubIcon,
     linkedin: linkedinIcon,
-    twitter: twitterIcon,
     location: locationIcon,
     phone: phoneIcon,
-    email: emailIcon,
+    twitter: twitterIcon,
     visit: visitIcon,
 };
 
+/* ==========================================================================
+   Public functions
+   ========================================================================== */
+
 /**
- * Return a normal image asset.
+ * Returns the webpack-generated URL for an asset.
  */
-export function asset(name) {
-    return assets[name] ?? null;
+export function asset(path) {
+    return assets[path] ?? null;
 }
 
 /**
- * Return an SVG icon.
+ * Returns the webpack-generated URL for an SVG icon.
  */
 export function icon(name) {
     return icons[name] ?? null;
 }
 
 /**
- * Return an image or generate a placeholder when it doesn't exist.
+ * Returns an asset URL.
+ * If the asset doesn't exist, a generated placeholder is returned.
  */
-export function assetOrPlaceholder(name, label, width = 600, height = 400) {
-    const url = asset(name);
+export function assetOrPlaceholder(path, label, width = 600, height = 400) {
+    const url = asset(path);
 
-    return url || placeholder(label || name, width, height);
+    if (!url) {
+        console.warn(`[assets] "${path}" not found in src/assets - using placeholder.`);
+    }
+
+    return url || placeholder(label, width, height);
 }
 
 /**
- * Add actual src attributes to images in template.html.
+ * Binds static images and icons from template.html.
+ *
+ * Example:
+ *
+ * <img data-asset="profile-pic.png">
+ *
+ * <img data-icon="github">
  */
 export function bindStaticAssets(root = document) {
+    /* ---------- Normal images ---------- */
+
     root.querySelectorAll("img[data-asset]").forEach((img) => {
-        const name = img.dataset.asset;
         const width = Number(img.getAttribute("width")) || 600;
         const height = Number(img.getAttribute("height")) || 400;
 
-        img.src = assetOrPlaceholder(name, img.dataset.fallback || name, width, height);
+        const path = img.dataset.asset;
+        const fallback = img.dataset.fallback || path;
+
+        img.src = assetOrPlaceholder(path, fallback, width, height);
     });
+
+    /* ---------- SVG icons ---------- */
 
     root.querySelectorAll("img[data-icon]").forEach((img) => {
         const name = img.dataset.icon;
@@ -76,7 +111,7 @@ export function bindStaticAssets(root = document) {
         if (url) {
             img.src = url;
         } else {
-            console.warn(`Icon "${name}" does not exist.`);
+            console.warn(`[assets] icon "${name}" not found in src/assets/svgs`);
         }
     });
 }
