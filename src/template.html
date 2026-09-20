@@ -3,13 +3,210 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Homepage</title>
+        <meta name="theme-color" content="#020806" />
+        <meta
+            name="description"
+            content="Atharva Pawar - Software Engineering and AI/ML student. Portfolio of projects and contact details."
+        />
+        <title>Atharva Pawar - Portfolio</title>
+
+        <!-- Fonts: Chakra Petch (display) + JetBrains Mono (body/UI) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- CSS + JS bundles are injected here by html-webpack-plugin -->
+        <!-- Marks the page as JS-enabled before first paint so reveal animations can start hidden -->
+        <script>
+            document.documentElement.classList.add("js");
+        </script>
     </head>
+
     <body>
-        <div id="container">
-            <header>header</header>
-            <main>main</main>
-            <footer>footer</footer>
+        <!-- BOOT SEQUENCE (plays once per session, skippable) -->
+        <div class="boot" id="boot" role="status" aria-live="polite">
+            <pre class="boot-log" id="bootLog"></pre>
+            <div class="boot-bar" aria-hidden="true"><span id="bootFill"></span></div>
+            <p class="boot-skip">press any key to skip</p>
         </div>
+
+        <!-- BACKGROUND / OVERLAY LAYERS -->
+        <canvas id="matrix" aria-hidden="true"></canvas>
+        <div class="scanlines" aria-hidden="true"></div>
+        <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+        <div class="progress" id="progress" aria-hidden="true"></div>
+
+        <!-- NAVIGATION -->
+        <nav class="nav" id="nav" aria-label="Primary">
+            <div class="nav-inner">
+                <a href="#top" class="nav-brand magnetic">atharva<span>@portfolio</span>:~$</a>
+                <div class="nav-right">
+                    <ul class="nav-links">
+                        <li><a href="#about" data-nav="about">about</a></li>
+                        <li><a href="#work" data-nav="work">work</a></li>
+                        <li><a href="#contact" data-nav="contact">contact</a></li>
+                    </ul>
+                    <span class="nav-clock" id="clock" aria-hidden="true"></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- HEADER / HERO SECTION -->
+        <header class="header" id="top">
+            <div class="container header-container">
+                <div class="profile-section" data-reveal="zoom">
+                    <div class="avatar" data-tilt="12">
+                        <span class="avatar-ring" aria-hidden="true"></span>
+                        <img
+                            data-asset="profile-pic.png"
+                            alt="Atharva Pawar"
+                            class="profile-pic"
+                            width="400"
+                            height="400"
+                            data-fallback="AP"
+                        />
+                    </div>
+                    <p class="status">
+                        <span class="status-dot" aria-hidden="true"></span>open to collaborate
+                    </p>
+                </div>
+
+                <div class="about-section" id="about">
+                    <h1 class="profile-name glitch" data-text="Atharva Pawar" data-reveal>
+                        <span data-scramble>Atharva Pawar</span
+                        ><span class="block-caret" aria-hidden="true"></span>
+                    </h1>
+
+                    <div class="terminal about-terminal" data-reveal style="--i: 2">
+                        <div class="terminal-bar">
+                            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                            <span class="terminal-title">~/about.md</span>
+                        </div>
+                        <div class="terminal-body">
+                            <h2 class="section-title">About me</h2>
+                            <p class="about-text">
+                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Hic
+                                cupiditate libero voluptates at nam fugit quisquam facilis
+                                blanditiis iste nobis. Facere ad sit dignissimos laudantium ratione
+                                architecto, non, iusto voluptas, culpa quia mollitia voluptatum eum
+                                optio expedita consectetur corporis omnis!
+                            </p>
+
+                            <p
+                                class="role-line"
+                                aria-label="Currently: front-end developer, AI/ML student"
+                            >
+                                <span class="prompt">$</span> whoami --now
+                                <span class="role-typed" id="roleTyped" aria-hidden="true"
+                                    >Front-end developer</span
+                                ><span class="caret" aria-hidden="true"></span>
+                            </p>
+
+                            <div class="social-links">
+                                <a href="#" class="icon-btn magnetic" aria-label="GitHub Profile">
+                                    <img data-icon="github" alt="" aria-hidden="true" />
+                                </a>
+                                <a href="#" class="icon-btn magnetic" aria-label="LinkedIn Profile">
+                                    <img data-icon="linkedin" alt="" aria-hidden="true" />
+                                </a>
+                                <a href="#" class="icon-btn magnetic" aria-label="Twitter Profile">
+                                    <img data-icon="twitter" alt="" aria-hidden="true" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="#work" class="scroll-hint" aria-label="Scroll to my work"><span></span></a>
+        </header>
+
+        <!-- MAIN PORTFOLIO SECTION -->
+        <main class="main-content" id="work">
+            <div class="container">
+                <div class="section-head" data-reveal>
+                    <h2 class="section-title" data-scramble>My Work</h2>
+                    <p class="section-sub"><span class="prompt">$</span> ls ./projects</p>
+                </div>
+
+                <!-- Cards are generated from src/data/projects.js by src/js/projects.js -->
+                <div class="projects-grid" id="projects"></div>
+            </div>
+        </main>
+
+        <!-- FOOTER SECTION -->
+        <footer class="footer" id="contact">
+            <div class="container footer-container">
+                <div class="footer-left">
+                    <h2 class="section-title" data-reveal data-scramble>Contact me</h2>
+                    <p class="footer-tagline" data-reveal style="--i: 1">
+                        Please get in touch if you think our work could be mutually beneficial!
+                    </p>
+
+                    <address class="contact-info">
+                        <div class="contact-item" data-reveal="left" style="--i: 2">
+                            <img data-icon="location" alt="" aria-hidden="true" />
+                            <p>Kolhapur, Maharashtra - 416012</p>
+                        </div>
+
+                        <div class="contact-item" data-reveal="left" style="--i: 3">
+                            <img data-icon="phone" alt="" aria-hidden="true" />
+                            <a href="tel:919699946421">+91-96999-46421</a>
+                        </div>
+
+                        <div class="contact-item" data-reveal="left" style="--i: 4">
+                            <img data-icon="email" alt="" aria-hidden="true" />
+                            <a href="mailto:work.atharvapawar@gmail.com"
+                                >work.atharvapawar@gmail.com</a
+                            >
+                            <button
+                                type="button"
+                                class="copy-btn"
+                                data-copy="work.atharvapawar@gmail.com"
+                                aria-label="Copy email address"
+                            >
+                                copy
+                            </button>
+                        </div>
+                    </address>
+
+                    <div class="social-links footer-socials" data-reveal style="--i: 5">
+                        <a href="#" class="icon-btn magnetic" aria-label="GitHub"
+                            ><img data-icon="github" alt=""
+                        /></a>
+                        <a href="#" class="icon-btn magnetic" aria-label="LinkedIn"
+                            ><img data-icon="linkedin" alt=""
+                        /></a>
+                        <a href="#" class="icon-btn magnetic" aria-label="Twitter"
+                            ><img data-icon="twitter" alt=""
+                        /></a>
+                    </div>
+                </div>
+
+                <div class="footer-right" data-reveal="right" style="--i: 2">
+                    <div class="footer-frame" data-tilt="8">
+                        <span class="card-glare" aria-hidden="true"></span>
+                        <img
+                            data-asset="footer-profile.jpg"
+                            alt="Atharva Pawar working"
+                            class="footer-profile-pic"
+                            width="600"
+                            height="750"
+                            loading="lazy"
+                            data-fallback="footer-profile.jpg"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <p class="footer-note container">
+                <span>&copy; 2026 Atharva Pawar</span>
+                <span>psst: try the konami code</span>
+            </p>
+        </footer>
+
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
     </body>
 </html>
