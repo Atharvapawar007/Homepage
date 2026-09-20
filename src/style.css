@@ -75,22 +75,22 @@ h6 {
 
 /*---------------------------------------*/
 
-*{
+* {
     border: 1px solid red;
 }
 
-header{
+header {
     height: 100vh;
 }
 
-img{
+img {
     height: 30rem;
 }
 
-main{
+main {
     height: 100vh;
 }
 
-footer{
+footer {
     height: 100vh;
 }
